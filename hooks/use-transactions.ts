@@ -61,7 +61,7 @@ export const useTransactions = () => {
       });
 
       if (response.ok) {
-        setTransactions(prev => 
+        setTransactions(prev =>
           prev.map(t => t.id === id ? { ...t, ...updates } : t)
         );
       } else {

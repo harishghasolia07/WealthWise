@@ -97,7 +97,7 @@ export default function Home() {
                   <CardTitle>Quick Add Transaction</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <TransactionForm 
+                  <TransactionForm
                     onSubmit={handleAddTransaction}
                   />
                 </CardContent>

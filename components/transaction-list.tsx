@@ -33,7 +33,7 @@ export const TransactionList = ({ transactions, onEdit, onDelete }: TransactionL
     return defaultCategories.find(cat => cat.id === categoryId) || defaultCategories[0];
   };
 
-  const sortedTransactions = [...transactions].sort((a, b) => 
+  const sortedTransactions = [...transactions].sort((a, b) =>
     new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
@@ -46,7 +46,7 @@ export const TransactionList = ({ transactions, onEdit, onDelete }: TransactionL
         <div className="space-y-3">
           {sortedTransactions.map((transaction) => {
             const category = getCategoryInfo(transaction.category);
-            
+
             return (
               <div
                 key={transaction.id}

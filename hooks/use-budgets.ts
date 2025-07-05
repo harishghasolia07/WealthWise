@@ -40,8 +40,8 @@ export const useBudgets = () => {
         setBudgets(prev => {
           const existing = prev.find(b => b.categoryId === categoryId && b.month === month);
           if (existing) {
-            return prev.map(b => 
-              b.categoryId === categoryId && b.month === month 
+            return prev.map(b =>
+              b.categoryId === categoryId && b.month === month
                 ? { ...b, amount }
                 : b
             );

@@ -15,12 +15,12 @@ export const CategoryPieChart = ({ transactions }: CategoryPieChartProps) => {
     const currentMonth = new Date();
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(currentMonth);
-    
+
     const currentMonthExpenses = transactions.filter(t => {
       const transactionDate = new Date(t.date);
-      return transactionDate >= monthStart && 
-             transactionDate <= monthEnd && 
-             t.type === 'expense';
+      return transactionDate >= monthStart &&
+        transactionDate <= monthEnd &&
+        t.type === 'expense';
     });
 
     const categoryTotals = currentMonthExpenses.reduce((acc, transaction) => {
@@ -94,8 +94,8 @@ export const CategoryPieChart = ({ transactions }: CategoryPieChartProps) => {
           <div className="grid grid-cols-2 gap-2">
             {data.slice(0, 6).map((item, index) => (
               <div key={index} className="flex items-center gap-2 text-sm">
-                <div 
-                  className="w-3 h-3 rounded-full" 
+                <div
+                  className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: item.color }}
                 />
                 <span className="text-xs">{item.icon}</span>
