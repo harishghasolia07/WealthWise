@@ -13,7 +13,7 @@ export const MonthlyExpensesChart = ({ transactions }: MonthlyExpensesChartProps
   const generateMonthlyData = () => {
     const currentDate = new Date();
     const sixMonthsAgo = subMonths(currentDate, 5);
-    
+
     const months = eachMonthOfInterval({
       start: startOfMonth(sixMonthsAgo),
       end: endOfMonth(currentDate),
@@ -22,7 +22,7 @@ export const MonthlyExpensesChart = ({ transactions }: MonthlyExpensesChartProps
     return months.map(month => {
       const monthStart = startOfMonth(month);
       const monthEnd = endOfMonth(month);
-      
+
       const monthTransactions = transactions.filter(t => {
         const transactionDate = new Date(t.date);
         return transactionDate >= monthStart && transactionDate <= monthEnd;
@@ -57,19 +57,19 @@ export const MonthlyExpensesChart = ({ transactions }: MonthlyExpensesChartProps
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="month" 
+              <XAxis
+                dataKey="month"
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
               />
-              <YAxis 
+              <YAxis
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(value) => `$${value}`}
               />
-              <Tooltip 
+              <Tooltip
                 formatter={(value: number, name: string) => [
                   `$${value.toFixed(2)}`,
                   name.charAt(0).toUpperCase() + name.slice(1)

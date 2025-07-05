@@ -13,18 +13,18 @@ interface BudgetComparisonChartProps {
 
 export const BudgetComparisonChart = ({ transactions }: BudgetComparisonChartProps) => {
   const { getBudget } = useBudgets();
-  
+
   const generateBudgetData = () => {
     const currentMonth = new Date();
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(currentMonth);
     const monthKey = format(currentMonth, 'yyyy-MM');
-    
+
     const currentMonthExpenses = transactions.filter(t => {
       const transactionDate = new Date(t.date);
-      return transactionDate >= monthStart && 
-             transactionDate <= monthEnd && 
-             t.type === 'expense';
+      return transactionDate >= monthStart &&
+        transactionDate <= monthEnd &&
+        t.type === 'expense';
     });
 
     const categoryTotals = currentMonthExpenses.reduce((acc, transaction) => {
@@ -35,7 +35,7 @@ export const BudgetComparisonChart = ({ transactions }: BudgetComparisonChartPro
     return defaultCategories.map(category => {
       const spent = categoryTotals[category.id] || 0;
       const budget = getBudget(category.id, monthKey);
-      
+
       return {
         category: category.name,
         spent,
@@ -78,22 +78,22 @@ export const BudgetComparisonChart = ({ transactions }: BudgetComparisonChartPro
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} layout="horizontal">
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                type="number" 
+              <XAxis
+                type="number"
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(value) => `$${value}`}
               />
-              <YAxis 
-                type="category" 
-                dataKey="category" 
+              <YAxis
+                type="category"
+                dataKey="category"
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
                 width={100}
               />
-              <Tooltip 
+              <Tooltip
                 formatter={(value: number, name: string) => [
                   `$${value.toFixed(2)}`,
                   name.charAt(0).toUpperCase() + name.slice(1)
