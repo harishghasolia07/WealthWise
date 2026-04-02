@@ -6,7 +6,7 @@ A Next.js application to track your personal finances, manage budgets, and visua
 
 - **Dashboard:** At-a-glance overview of your financial status, including total income, total expenses, and net balance.
 - **Transaction Management:** Add, edit, and delete income and expense transactions.
-- **Role-Based UI Demo:** Switch between Admin and Viewer roles to demonstrate read-only vs edit capabilities.
+- **Role-Based UI:** Auth-backed Admin/Viewer behavior with a role selector for demonstration.
 - **Budgeting:** Set monthly budgets for different spending categories and track your progress.
 - **Data Visualization:** Interactive charts to visualize your spending by category, monthly expenses over time, and compare your spending against your budgets.
 - **Categorization:** Organize your transactions into customizable categories.
@@ -55,12 +55,26 @@ Follow these instructions to get a copy of the project up and running on your lo
     ```
 
 3.  **Set up environment variables:**
-    Create a `.env.local` file in the root of the project and add your MongoDB connection string:
+    Create a `.env.local` file in the root of the project and add:
     ```
     MONGODB_URI=your_mongodb_connection_string
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+    CLERK_SECRET_KEY=your_clerk_secret_key
     ```
 
-4.  **Run the development server:**
+4.  **Configure Clerk routes:**
+    In your Clerk dashboard, ensure the application uses these local routes:
+    - Sign in URL: `/sign-in`
+    - Sign up URL: `/sign-up`
+    - After sign in URL: `/dashboard`
+    - After sign up URL: `/dashboard`
+
+5.  **Role behavior:**
+    - Default role is `admin` unless explicitly switched to `viewer` from the dashboard role dropdown.
+    - `admin`: can add/edit/delete transactions and update budgets.
+    - `viewer`: read-only access.
+
+6.  **Run the development server:**
     ```bash
     npm run dev
     # or

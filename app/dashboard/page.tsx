@@ -28,6 +28,7 @@ export default function DashboardPage() {
   const { user, isLoaded } = useUser();
   const { transactions, loading, addTransaction, updateTransaction, deleteTransaction } = useTransactions();
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+  const [isUpdatingRole, setIsUpdatingRole] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<TransactionTypeFilter>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
@@ -218,6 +219,35 @@ export default function DashboardPage() {
     }
   };
 
+  const handleRoleChange = async (role: 'admin' | 'viewer') => {
+    if (!user || role === selectedRole) {
+      return;
+    }
+
+    try {
+      setIsUpdatingRole(true);
+
+      const response = await fetch('/api/me/role', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ role }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to update role:', response.statusText);
+        return;
+      }
+
+      await user.reload();
+    } catch (error) {
+      console.error('Error updating role:', error);
+    } finally {
+      setIsUpdatingRole(false);
+    }
+  };
+
   const activeFilterCount = [typeFilter !== 'all', categoryFilter !== 'all', startDateFilter, endDateFilter, minAmountFilter, maxAmountFilter].filter(Boolean).length;
 
   if (loading) {
@@ -251,9 +281,15 @@ export default function DashboardPage() {
             <p className="text-base sm:text-lg text-muted-foreground mt-2">Track your income, expenses, and savings</p>
           </div>
           <div className="flex items-center flex-wrap sm:flex-nowrap gap-2 sm:gap-3">
-            <span className="inline-flex items-center rounded-full border border-border/60 bg-secondary/60 px-3 py-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              {selectedRole}
-            </span>
+            <Select value={selectedRole} onValueChange={(value) => handleRoleChange(value as 'admin' | 'viewer')} disabled={isUpdatingRole}>
+              <SelectTrigger className="w-[130px] h-9 text-xs sm:text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="admin">Admin</SelectItem>
+                <SelectItem value="viewer">Viewer</SelectItem>
+              </SelectContent>
+            </Select>
             <ThemeToggle />
             <UserButton afterSignOutUrl="/" />
           </div>

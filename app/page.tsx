@@ -27,11 +27,10 @@ export default function LandingPage() {
                   Sign In
                 </Link>
                 <Link
-                  href="/sign-up"
+                  href="/sign-in"
                   className="inline-flex items-center justify-center rounded-md text-xs sm:text-sm font-medium h-8 sm:h-9 px-3 sm:px-4 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors whitespace-nowrap"
                 >
-                  <span className="sm:hidden">Create</span>
-                  <span className="hidden sm:inline">Create Account</span>
+                  Launch App
                 </Link>
               </SignedOut>
               <SignedIn>
@@ -65,10 +64,10 @@ export default function LandingPage() {
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <SignedOut>
                 <Link
-                  href="/sign-up"
+                  href="/sign-in"
                   className="inline-flex items-center justify-center rounded-md text-base font-medium h-12 px-8 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors gap-2"
                 >
-                  Get Started
+                  Sign In to Start
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </SignedOut>
@@ -167,13 +166,24 @@ export default function LandingPage() {
               <p className="text-muted-foreground max-w-lg mx-auto mb-8">
                 Start tracking your finances today and see where your money goes.
               </p>
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center justify-center rounded-md text-base font-medium h-12 px-8 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors gap-2"
-              >
-                Open Dashboard
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+              <SignedOut>
+                <Link
+                  href="/sign-in"
+                  className="inline-flex items-center justify-center rounded-md text-base font-medium h-12 px-8 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors gap-2"
+                >
+                  Sign In
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </SignedOut>
+              <SignedIn>
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center justify-center rounded-md text-base font-medium h-12 px-8 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors gap-2"
+                >
+                  Open Dashboard
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </SignedIn>
             </div>
           </div>
         </section>
