@@ -1,10 +1,9 @@
 import { MongoClient } from 'mongodb';
 
-// Use the provided MongoDB URI or environment variable
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://harish07:personalfinance090@cluster0.sjfs9or.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
+  throw new Error('Missing environment variable: "MONGODB_URI"');
 }
 
 const uri = MONGODB_URI;

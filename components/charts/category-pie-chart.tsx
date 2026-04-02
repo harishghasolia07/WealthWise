@@ -3,7 +3,7 @@
 import { Transaction } from '@/lib/types';
 import { defaultCategories } from '@/lib/categories';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
 
 interface CategoryPieChartProps {
@@ -44,15 +44,15 @@ export const CategoryPieChart = ({ transactions }: CategoryPieChartProps) => {
 
   if (data.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Category Breakdown</CardTitle>
+      <Card className="border-none shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-sm font-medium">Spending by Category</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-80 flex items-center justify-center text-muted-foreground">
+          <div className="h-72 flex items-center justify-center">
             <div className="text-center">
-              <p className="text-lg font-medium">No expenses this month</p>
-              <p className="text-sm">Add some transactions to see the breakdown</p>
+              <p className="text-sm font-medium text-foreground">No expenses this month</p>
+              <p className="text-xs text-muted-foreground mt-1">Add transactions to see breakdown</p>
             </div>
           </div>
         </CardContent>
@@ -61,46 +61,51 @@ export const CategoryPieChart = ({ transactions }: CategoryPieChartProps) => {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Category Breakdown - {format(new Date(), 'MMMM yyyy')}</CardTitle>
+    <Card className="border-none shadow-sm">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-sm font-medium">Spending by Category</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-80">
+        <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={data}
                 cx="50%"
                 cy="50%"
-                labelLine={false}
-                label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
+                innerRadius={50}
                 outerRadius={80}
-                fill="#8884d8"
+                paddingAngle={2}
                 dataKey="value"
+                stroke="none"
               >
                 {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                  fontSize: '12px',
+                }}
+                formatter={(value: number) => `$${value.toFixed(2)}`}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>
-        <div className="mt-4 space-y-2">
-          <p className="text-sm text-muted-foreground">
-            Total expenses: <span className="font-semibold">${total.toFixed(2)}</span>
+        <div className="pt-4 border-t space-y-3">
+          <p className="text-xs text-muted-foreground">
+            Total: <span className="font-medium text-foreground">${total.toFixed(2)}</span>
           </p>
-          <div className="grid grid-cols-2 gap-2">
-            {data.slice(0, 6).map((item, index) => (
-              <div key={index} className="flex items-center gap-2 text-sm">
-                <div
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: item.color }}
-                />
-                <span className="text-xs">{item.icon}</span>
-                <span className="truncate">{item.name}</span>
-                <span className="ml-auto font-medium">${item.value.toFixed(2)}</span>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+            {data.map((item, index) => (
+              <div key={index} className="flex items-center gap-2 text-xs">
+                <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
+                <span className="text-muted-foreground truncate">{item.name}</span>
+                <span className="ml-auto font-medium text-foreground">${item.value.toFixed(0)}</span>
               </div>
             ))}
           </div>

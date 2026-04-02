@@ -6,9 +6,15 @@ A Next.js application to track your personal finances, manage budgets, and visua
 
 - **Dashboard:** At-a-glance overview of your financial status, including total income, total expenses, and net balance.
 - **Transaction Management:** Add, edit, and delete income and expense transactions.
+- **Role-Based UI Demo:** Switch between Admin and Viewer roles to demonstrate read-only vs edit capabilities.
 - **Budgeting:** Set monthly budgets for different spending categories and track your progress.
 - **Data Visualization:** Interactive charts to visualize your spending by category, monthly expenses over time, and compare your spending against your budgets.
 - **Categorization:** Organize your transactions into customizable categories.
+- **Insights Panel:** Highest spending category, monthly comparisons, and contextual spending observations.
+- **Advanced Filtering:** Search, type/category filters, date range filters, and amount range filters.
+- **Export:** Export currently filtered transactions to CSV or JSON.
+- **Dark Mode:** Theme toggle with light/dark mode support.
+- **Persistence & Fallbacks:** MongoDB support with resilient file-storage fallback and persisted UI filter settings.
 
 ## Tech Stack
 

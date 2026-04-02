@@ -2,28 +2,28 @@
 
 import { Transaction } from '@/lib/types';
 import { defaultCategories } from '@/lib/categories';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Edit, Trash2, Calendar } from 'lucide-react';
+import { Edit, Trash2, Calendar, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface TransactionListProps {
   transactions: Transaction[];
-  onEdit: (transaction: Transaction) => void;
-  onDelete: (id: string) => void;
+  onEdit?: (transaction: Transaction) => void;
+  onDelete?: (id: string) => void;
+  canEdit?: boolean;
 }
 
-export const TransactionList = ({ transactions, onEdit, onDelete }: TransactionListProps) => {
+export const TransactionList = ({ transactions, onEdit, onDelete, canEdit = true }: TransactionListProps) => {
   if (transactions.length === 0) {
     return (
-      <Card>
-        <CardContent className="p-8 text-center">
-          <div className="text-muted-foreground">
-            <Calendar className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p className="text-lg font-medium">No transactions yet</p>
-            <p className="text-sm">Start by adding your first transaction above.</p>
+      <Card className="border-none shadow-sm">
+        <CardContent className="p-12 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+            <Calendar className="w-6 h-6 text-muted-foreground/50" />
           </div>
+          <p className="text-sm font-medium text-foreground">No transactions</p>
+          <p className="text-xs text-muted-foreground mt-1">Add your first transaction to get started</p>
         </CardContent>
       </Card>
     );
@@ -38,57 +38,59 @@ export const TransactionList = ({ transactions, onEdit, onDelete }: TransactionL
   );
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Recent Transactions</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
+    <Card className="border-none shadow-sm">
+      <CardContent className="p-0">
+        <div className="divide-y">
           {sortedTransactions.map((transaction) => {
             const category = getCategoryInfo(transaction.category);
 
             return (
               <div
                 key={transaction.id}
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                className="group flex items-start sm:items-center justify-between px-3 sm:px-4 py-3.5 hover:bg-secondary/30 transition-colors duration-150"
               >
-                <div className="flex items-center gap-3">
-                  <div className="text-2xl">{category.icon}</div>
-                  <div>
-                    <p className="font-medium">{transaction.description}</p>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <span>{format(new Date(transaction.date), 'MMM d, yyyy')}</span>
-                      <Badge variant="outline" style={{ backgroundColor: category.color + '20', color: category.color }}>
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: category.color + '15' }}>
+                    <span className="text-base">{category.icon}</span>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium truncate">{transaction.description}</p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-xs text-muted-foreground">{format(new Date(transaction.date), 'MMM d, yyyy')}</span>
+                      <span className="w-1 h-1 rounded-full bg-muted-foreground/30" />
+                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: category.color }} />
                         {category.name}
-                      </Badge>
+                      </span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 ml-3">
                   <div className="text-right">
-                    <p className={`font-semibold ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
+                    <p className={`text-xs sm:text-sm font-semibold ${transaction.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
                       {transaction.type === 'income' ? '+' : '-'}${transaction.amount.toFixed(2)}
                     </p>
-                    <p className="text-xs text-muted-foreground capitalize">{transaction.type}</p>
                   </div>
-                  <div className="flex gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onEdit(transaction)}
-                      className="h-8 w-8 p-0"
-                    >
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onDelete(transaction.id)}
-                      className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
+                  {canEdit && onEdit && onDelete && (
+                    <div className="flex gap-0.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-150">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onEdit(transaction)}
+                        className="h-7 w-7 p-0"
+                      >
+                        <Edit className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onDelete(transaction.id)}
+                        className="h-7 w-7 p-0 text-red-500 hover:text-red-600"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             );

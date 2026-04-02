@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTransactions, createTransaction } from '@/lib/database';
+import { getRequestAuth } from '@/lib/auth';
 
 export async function GET() {
   try {
-    const transactions = await getTransactions();
+    const { userId } = await getRequestAuth();
+
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const transactions = await getTransactions(userId);
     return NextResponse.json(transactions);
   } catch (error) {
     console.error('Error in GET /api/transactions:', error);
@@ -13,6 +20,16 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const { userId, role } = await getRequestAuth();
+
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (role !== 'admin') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
     const body = await request.json();
     const { amount, date, description, category, type } = body;
 
@@ -32,7 +49,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Type must be either expense or income' }, { status: 400 });
     }
 
-    const transaction = await createTransaction({
+    const transaction = await createTransaction(userId, {
       amount: numAmount,
       date,
       description: description.trim(),

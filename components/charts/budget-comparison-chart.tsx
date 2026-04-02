@@ -3,7 +3,7 @@
 import { Transaction } from '@/lib/types';
 import { defaultCategories } from '@/lib/categories';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
 import { useBudgets } from '@/hooks/use-budgets';
 
@@ -52,15 +52,15 @@ export const BudgetComparisonChart = ({ transactions }: BudgetComparisonChartPro
 
   if (data.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Budget vs Actual</CardTitle>
+      <Card className="border-none shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-sm font-medium">Budget vs Actual</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-80 flex items-center justify-center text-muted-foreground">
+          <div className="h-72 flex items-center justify-center">
             <div className="text-center">
-              <p className="text-lg font-medium">No budgets set</p>
-              <p className="text-sm">Set up budgets to track your spending</p>
+              <p className="text-sm font-medium text-foreground">No budgets set</p>
+              <p className="text-xs text-muted-foreground mt-1">Set budgets to track spending</p>
             </div>
           </div>
         </CardContent>
@@ -69,53 +69,64 @@ export const BudgetComparisonChart = ({ transactions }: BudgetComparisonChartPro
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Budget vs Actual - {format(new Date(), 'MMMM yyyy')}</CardTitle>
+    <Card className="border-none shadow-sm">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-sm font-medium">Budget vs Actual - {format(new Date(), 'MMMM yyyy')}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="h-80">
+      <CardContent className="space-y-6">
+        <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} layout="horizontal">
-              <CartesianGrid strokeDasharray="3 3" />
+            <BarChart data={data} layout="vertical" barGap={2}>
               <XAxis
                 type="number"
-                fontSize={12}
+                fontSize={11}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(value) => `$${value}`}
+                tick={{ fill: 'hsl(var(--muted-foreground))' }}
               />
               <YAxis
                 type="category"
                 dataKey="category"
-                fontSize={12}
+                fontSize={11}
                 tickLine={false}
                 axisLine={false}
-                width={100}
+                width={90}
+                tick={{ fill: 'hsl(var(--foreground))' }}
               />
               <Tooltip
+                cursor={{ fill: 'hsl(var(--muted))' }}
+                contentStyle={{
+                  backgroundColor: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                  fontSize: '12px',
+                }}
                 formatter={(value: number, name: string) => [
                   `$${value.toFixed(2)}`,
                   name.charAt(0).toUpperCase() + name.slice(1)
                 ]}
               />
-              <Bar dataKey="budget" fill="#e5e7eb" radius={[0, 4, 4, 0]} />
-              <Bar dataKey="spent" fill="#3b82f6" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="budget" fill="hsl(var(--muted))" radius={[0, 3, 3, 0]} barSize={12} />
+              <Bar dataKey="spent" fill="hsl(var(--chart-3))" radius={[0, 3, 3, 0]} barSize={12} />
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="mt-4 space-y-2">
+        <div className="space-y-2">
           {data.map((item, index) => (
-            <div key={index} className="flex items-center justify-between p-2 bg-muted/30 rounded-lg">
+            <div key={index} className="flex items-center justify-between py-2 px-3 rounded-lg bg-secondary/20">
               <div className="flex items-center gap-2">
-                <span className="text-lg">{item.icon}</span>
-                <span className="font-medium">{item.category}</span>
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: item.color + '15' }}>
+                  <span className="text-sm">{item.icon}</span>
+                </div>
+                <span className="text-sm font-medium">{item.category}</span>
               </div>
-              <div className="flex items-center gap-4 text-sm">
-                <span>Budget: ${item.budget.toFixed(2)}</span>
-                <span>Spent: ${item.spent.toFixed(2)}</span>
-                <span className={`font-semibold ${item.over > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                  {item.over > 0 ? `Over by $${item.over.toFixed(2)}` : `$${item.remaining.toFixed(2)} left`}
+              <div className="flex items-center gap-4 text-xs">
+                <span className="text-muted-foreground">Budget: ${item.budget.toFixed(0)}</span>
+                <span className="text-muted-foreground">Spent: ${item.spent.toFixed(0)}</span>
+                <span className={`font-medium ${item.over > 0 ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
+                  {item.over > 0 ? `-$${item.over.toFixed(0)}` : `$${item.remaining.toFixed(0)}`}
                 </span>
               </div>
             </div>
